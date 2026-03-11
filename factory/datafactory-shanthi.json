@@ -1,0 +1,9 @@
+{
+	"name": "datafactory-shanthi",
+	"location": "southindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "4319df92-0be0-4381-a6f4-df3bd03f8cc5",
+		"tenantId": "333910eb-9956-445a-87b7-8370823b9dfb"
+	}
+}
