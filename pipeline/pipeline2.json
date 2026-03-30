@@ -3,30 +3,127 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup1",
-				"type": "Lookup",
+				"name": "Until1",
+				"type": "Until",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(length(variables('startTable')),0)",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "firstVriable",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "firstValue",
+								"value": {
+									"value": "@first(variables('startTable'))",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set variable2",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "firstVriable",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "tempList",
+								"value": {
+									"value": "@skip(variables('startTable'),1)",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set variable3",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Set variable2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "tableList",
+								"value": {
+									"value": "@variables('tempList')",
+									"type": "Expression"
+								}
+							}
+						}
+					],
+					"timeout": "0.12:00:00"
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
 				"dependsOn": [],
 				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "PostgreSqlV2Source",
-						"queryTimeout": "02:00:00"
-					},
-					"dataset": {
-						"referenceName": "PostgreSqlTable1",
-						"type": "DatasetReference"
-					},
-					"firstRowOnly": false
+					"variableName": "startTable",
+					"value": {
+						"value": "@createArray('departments','categories','orders','products','customers','order_items')",
+						"type": "Expression"
+					}
 				}
 			}
 		],
+		"variables": {
+			"jsonList": {
+				"type": "Array"
+			},
+			"tableList": {
+				"type": "Array"
+			},
+			"firstValue": {
+				"type": "String"
+			},
+			"tempList": {
+				"type": "Array"
+			},
+			"startTable": {
+				"type": "Array"
+			}
+		},
 		"annotations": []
 	}
 }
