@@ -1,0 +1,12 @@
+{
+	"name": "AzureDatabricks1",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDatabricks",
+		"typeProperties": {
+			"domain": "https://adb-7405614257069775.15.azuredatabricks.net",
+			"authentication": "MSI",
+			"workspaceResourceId": "/subscriptions/47e06c6e-d53d-4058-b873-4e4fe124599e/resourceGroups/RG_ADF_DB_E2E/providers/Microsoft.Databricks/workspaces/retail_db"
+		}
+	}
+}
