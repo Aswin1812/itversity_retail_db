@@ -1,0 +1,48 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "datafactory-shanthi"
+		},
+		"AzureDatabricksRetailDb_accessToken": {
+			"value": ""
+		},
+		"PostgreSql1_password": {
+			"value": ""
+		},
+		"bronze_layer_ls_accountKey": {
+			"value": ""
+		},
+		"AzureDatabricks1_accessToken": {
+			"value": ""
+		},
+		"AzureDatabricksRetailDb_properties_typeProperties_existingClusterId": {
+			"value": "0309-171708-nm9wvxqz"
+		},
+		"PostgreSql1_properties_typeProperties_server": {
+			"value": "127.0.0.1"
+		},
+		"PostgreSql1_properties_typeProperties_database": {
+			"value": "itversity_retail_db"
+		},
+		"PostgreSql1_properties_typeProperties_username": {
+			"value": "postgres"
+		},
+		"bronze_layer_ls_properties_typeProperties_url": {
+			"value": "https://storageaccountshanthi.dfs.core.windows.net/"
+		},
+		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+			"value": "0309-171708-nm9wvxqz"
+		},
+		"productTrigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/47e06c6e-d53d-4058-b873-4e4fe124599e/resourceGroups/RG_ADF_DB_E2E/providers/Microsoft.Storage/storageAccounts/storageaccountshanthi"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
