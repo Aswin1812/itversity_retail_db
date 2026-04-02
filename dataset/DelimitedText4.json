@@ -1,5 +1,5 @@
 {
-	"name": "DelimitedText2",
+	"name": "DelimitedText4",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "bronze_layer_ls",
@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "recur_dir_paste",
+				"folderPath": "trigger_files",
 				"fileSystem": "bronze"
 			},
 			"columnDelimiter": ",",
