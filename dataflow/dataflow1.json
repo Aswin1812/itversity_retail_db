@@ -10,6 +10,16 @@
 						"type": "DatasetReference"
 					},
 					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText6",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				},
+				{
+					"name": "source3"
 				}
 			],
 			"sinks": [
@@ -24,6 +34,18 @@
 			"transformations": [
 				{
 					"name": "filter1"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "filter2"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "join2"
 				}
 			],
 			"scriptLines": [
@@ -37,7 +59,44 @@
 				"     validateSchema: false,",
 				"     inferDriftedColumnTypes: true,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 filter(order_status == 'CLOSED') ~> filter1",
+				"source(output(",
+				"          order_item_id as integer,",
+				"          order_item_order_id as integer,",
+				"          order_item_product_id as integer,",
+				"          order_item_quantity as integer,",
+				"          order_item_subtotal as double,",
+				"          order_item_product_price as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source2",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false) ~> source3",
+				"source1 filter(order_status == 'COMPLETE') ~> filter1",
+				"source2, source1 join(order_item_order_id == order_id,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 filter(in(['COMPLETE', 'CLOSED'], order_status)) ~> filter2",
+				"filter2 select(mapColumn(",
+				"          order_item_id,",
+				"          order_item_product_id,",
+				"          order_item_quantity,",
+				"          order_item_subtotal,",
+				"          order_item_product_price,",
+				"          order_id,",
+				"          order_date,",
+				"          order_customer_id,",
+				"          order_status",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"source3 join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2",
 				"filter1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
