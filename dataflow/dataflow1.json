@@ -20,10 +20,10 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "Json1",
+						"referenceName": "Json2",
 						"type": "DatasetReference"
 					},
-					"name": "source3"
+					"name": "source4"
 				}
 			],
 			"sinks": [
@@ -47,6 +47,12 @@
 				},
 				{
 					"name": "select1"
+				},
+				{
+					"name": "flatten1"
+				},
+				{
+					"name": "surrogateKey1"
 				}
 			],
 			"scriptLines": [
@@ -71,11 +77,15 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source2",
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          customer as string,",
+				"          items as (price as integer, product as string)[],",
+				"          order_id as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     inferDriftedColumnTypes: true,",
 				"     ignoreNoFilesFound: false,",
-				"     documentForm: 'documentPerLine') ~> source3",
+				"     documentForm: 'arrayOfDocuments') ~> source4",
 				"source1 filter(order_status == 'COMPLETE') ~> filter1",
 				"source2, source1 join(order_item_order_id == order_id,",
 				"     joinType:'inner',",
@@ -96,6 +106,18 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
+				"source4 foldDown(unroll(items),",
+				"     mapColumn(",
+				"          order_id,",
+				"          customer,",
+				"          product = items.product,",
+				"          price = items.price",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 keyGenerate(output(sk_order_id as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
 				"filter1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
